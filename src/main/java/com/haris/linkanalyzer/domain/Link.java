@@ -6,8 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @NoArgsConstructor
@@ -19,6 +18,9 @@ public class Link {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(updatable = false, nullable = false)
     Long id;
+
+    @NotNull
+    String value;
     String parsedContent;
 
     @ManyToOne

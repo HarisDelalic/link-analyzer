@@ -5,6 +5,7 @@ import com.haris.linkanalyzer.domain.User;
 import com.haris.linkanalyzer.exception.UserNotFoundException;
 import com.haris.linkanalyzer.repository.LinkRepository;
 import com.haris.linkanalyzer.repository.UserRepository;
+import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +27,11 @@ public class LinkService {
         } else {
             throw new UserNotFoundException();
         }
+    }
+
+//    TODO: user has to be authenticated to do this
+    public Link create(Link link) {
+//        TODO: link.setUser(authenticatedUser);
+        return linkRepository.save(link);
     }
 }

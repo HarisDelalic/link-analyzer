@@ -15,11 +15,13 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
 class LinkServiceTest {
+    private static final String LINK_VALUE = "http://example.com/?foo=bar&hello=world";
 
     @Mock
     LinkRepository linkRepository;
@@ -54,5 +56,16 @@ class LinkServiceTest {
         Set<Link> user1Links = linkService.getUserLinks(user1.getId());
 
         assertEquals(2, user1Links.size());
+    }
+
+    @Test
+    void create() {
+        user1link1.setValue(LINK_VALUE);
+
+        when(linkRepository.save(user1link1)).thenReturn(user1link1);
+
+        Link saved = linkService.create(user1link1);
+
+        assertEquals(saved.getValue(), LINK_VALUE);
     }
 }

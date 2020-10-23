@@ -1,6 +1,7 @@
 package com.haris.linkanalyzer.service;
 
 import com.haris.linkanalyzer.domain.User;
+import com.haris.linkanalyzer.domain.factory.UserFactory;
 import com.haris.linkanalyzer.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,9 @@ class UserServiceTest {
     private static final String EMAIL = "email@email.com";
 
     @Mock
+    UserFactory userFactory;
+
+    @Mock
     UserRepository userRepository;
 
     @InjectMocks
@@ -37,6 +41,7 @@ class UserServiceTest {
 
     @Test
     void register() {
+        given(userFactory.createNewUser(user)).willReturn(user);
         given(userRepository.save(user)).willReturn(user);
 
         User registeredUser = userService.register(user);

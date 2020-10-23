@@ -1,6 +1,6 @@
 package com.haris.linkanalyzer.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,6 +13,9 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @Builder
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Link {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

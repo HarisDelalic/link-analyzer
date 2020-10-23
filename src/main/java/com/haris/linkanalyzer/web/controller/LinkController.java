@@ -35,4 +35,9 @@ public class LinkController {
                                                 @RequestBody Tag tagData) {
         return new ResponseEntity<Tag>(tagService.create(linkId, tagData), HttpStatus.CREATED);
     }
+
+    @GetMapping("/search/{tagValues}")
+    public ResponseEntity<Set<Link>> searchLinksByTags(@PathVariable("tagValues") Set<String> tagValues) {
+        return new ResponseEntity<Set<Link>>(linkService.searchLinksByTags(tagValues), HttpStatus.OK);
+    }
 }

@@ -10,7 +10,6 @@ import com.haris.linkanalyzer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,6 +23,8 @@ public class LinkService {
 
     private final UserRepository userRepository;
     private final LinkRepository linkRepository;
+    private final LoggedInUserService loggedInUserService;
+    private final LinkSearcher linkSearcher;
     private final HtmlParser htmlParser;
 
     public Set<Link> getUserLinks(Long userId) {
@@ -53,14 +54,18 @@ public class LinkService {
         } else {
             throw new UserNotFoundException();
         }
-
-
     }
 
-    private Optional<User> getLoggedInUser() {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findUserByEmail(userEmail);
+    public Set<Link> searchLinksByTags(Set<String> tagValues) {
+
+        if(getLoggedInUser().isPresent()) {
+            return linkSearcher.searchByTags(tagValues);
+        } else {
+            throw new UserNotFoundException();
+        }
     }
 
-
+    public Optional<User> getLoggedInUser() {
+        return loggedInUserService.getLoggedInUser();
+    }
 }

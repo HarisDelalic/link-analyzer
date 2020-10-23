@@ -1,9 +1,7 @@
 package com.haris.linkanalyzer.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.*;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,6 +13,9 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @Builder
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,7 +25,9 @@ public class Tag {
     @NotNull
     String value;
 
-    @ManyToMany(mappedBy = "tags", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "tags", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Link> links = new HashSet<>();
 
 }

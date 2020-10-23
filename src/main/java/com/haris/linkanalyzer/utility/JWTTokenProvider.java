@@ -34,10 +34,6 @@ public class JWTTokenProvider {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Autowired
-    MessageSource messageSource;
-
-
     public String generateJwtToken(UserPrincipal userPrincipal) {
         String[] claims = getClaimsFromUser(userPrincipal);
         return JWT.create()
@@ -101,8 +97,7 @@ public class JWTTokenProvider {
             Algorithm algorithm = Algorithm.HMAC512(secret);
             verifier = JWT.require(algorithm).withIssuer(MY_COMPANY).build();
         } catch (JWTVerificationException exception) {
-            throw new JWTVerificationException(messageSource
-                    .getMessage("security.token_cant_be_verified", null, LocaleContextHolder.getLocale()));
+            throw new JWTVerificationException("verification exception");
         }
         return verifier;
     }

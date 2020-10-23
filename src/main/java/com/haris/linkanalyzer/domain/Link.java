@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,14 +14,14 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @Builder
-public class User {
+public class Link {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(updatable = false, nullable = false)
-    private Long id;
-    private String email;
-    private String username;
-    private String password;
-    @OneToMany(mappedBy = "user")
-    private Set<Link> links;
+    Long id;
+    String parsedContent;
+
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable=false)
+    private User user;
 }

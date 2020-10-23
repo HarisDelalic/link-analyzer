@@ -1,5 +1,6 @@
 package com.haris.linkanalyzer.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ public class User {
     private Long id;
     private String email;
     private String username;
+    @JsonIgnore
     private String password;
     @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
     private Set<Link> links;

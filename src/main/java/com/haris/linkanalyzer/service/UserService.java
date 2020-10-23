@@ -32,7 +32,7 @@ public class UserService implements UserDetailsService {
     public User login(User user) {
         authenticate(user);
 
-        return userRepository.findUserByEmailAndPassword(user.getEmail(), user.getPassword())
+        return userRepository.findUserByEmail(user.getEmail())
                 .orElseThrow(UserNotFoundException::new);
     }
 

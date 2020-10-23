@@ -7,5 +7,5 @@ public class SecurityConstant {
     public static final String MY_COMPANY = "My Company";
     public static final String AUTHORITIES = "authorities";
     public static final String OPTIONS_HTTP_METHOD = "OPTIONS";
-    public static final String[] PUBLIC_URLS = { "/users/**" };
+    public static final String[] PUBLIC_URLS = { "/users/login", "/users/register" };
 }

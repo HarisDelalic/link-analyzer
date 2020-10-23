@@ -7,8 +7,10 @@ import com.haris.linkanalyzer.repository.LinkRepository;
 import com.haris.linkanalyzer.repository.UserRepository;
 import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,9 +31,16 @@ public class LinkService {
         }
     }
 
-//    TODO: user has to be authenticated to do this
+    @Transactional
     public Link create(Link link) {
-//        TODO: link.setUser(authenticatedUser);
-        return linkRepository.save(link);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> user = userRepository.findUserByEmail(userEmail);
+
+        if(user.isPresent()) {
+            link.setUser(user.get());
+            return linkRepository.save(link);
+        } else {
+            throw new UserNotFoundException();
+        }
     }
 }

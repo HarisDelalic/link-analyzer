@@ -1,4 +1,4 @@
-package com.haris.linkanalyzer.domain.web.controller;
+package com.haris.linkanalyzer.web.controller;
 
 import com.haris.linkanalyzer.domain.User;
 import com.haris.linkanalyzer.service.UserService;
@@ -23,5 +23,11 @@ public class UserController {
     public ResponseEntity<User> register(@Valid @RequestBody User user) {
         User registeredUser = userService.register(user);
         return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@Valid @RequestBody User user) {
+        User loggedInUser = userService.login(user);
+        return new ResponseEntity<>(loggedInUser,  HttpStatus.OK);
     }
 }

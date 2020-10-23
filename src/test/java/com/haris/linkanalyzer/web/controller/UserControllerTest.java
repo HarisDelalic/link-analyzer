@@ -1,8 +1,9 @@
-package com.haris.linkanalyzer.domain.web.controller;
+package com.haris.linkanalyzer.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haris.linkanalyzer.domain.User;
 import com.haris.linkanalyzer.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -30,12 +31,16 @@ class UserControllerTest {
 
     User user;
 
-    @Test
-    void register() throws Exception {
+    @BeforeEach
+    void setUp() {
         user = User.builder()
                 .username("username")
                 .email("email@email.com")
                 .build();
+    }
+
+    @Test
+    void register() throws Exception {
 
         when(userService.register(user)).thenReturn(user);
 
@@ -45,5 +50,15 @@ class UserControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.username", is(user.getUsername())))
                 .andExpect(jsonPath("$.email", is(user.getEmail())));
+    }
+
+    @Test
+    void login() throws Exception {
+        when(userService.login(user)).thenReturn(user);
+
+        mockMvc.perform(post("/users/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isOk());
     }
 }

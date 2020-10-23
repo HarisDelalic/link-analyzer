@@ -23,12 +23,13 @@ public class Link {
     String value;
     String parsedContent;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
-    @JsonIgnore
     private User user;
 
-    @ManyToMany(cascade = {CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "link_tags",
             joinColumns = @JoinColumn(

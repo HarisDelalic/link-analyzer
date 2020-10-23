@@ -1,12 +1,15 @@
 package com.haris.linkanalyzer.service;
 
 import com.haris.linkanalyzer.domain.Link;
+import com.haris.linkanalyzer.domain.Tag;
 import com.haris.linkanalyzer.domain.User;
+import com.haris.linkanalyzer.exception.CannotFindAnyTagOnLinkException;
 import com.haris.linkanalyzer.exception.UserNotFoundException;
 import com.haris.linkanalyzer.repository.LinkRepository;
 import com.haris.linkanalyzer.repository.UserRepository;
-import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.jsoup.nodes.Document;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +19,17 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class LinkService {
 
     private final UserRepository userRepository;
     private final LinkRepository linkRepository;
+    private final HtmlParser htmlParser;
 
     public Set<Link> getUserLinks(Long userId) {
         Optional<User> user = userRepository.findById(userId);
 
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             return linkRepository.findAllByUser(user.get());
         } else {
             throw new UserNotFoundException();
@@ -33,14 +38,29 @@ public class LinkService {
 
     @Transactional
     public Link create(Link link) {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<User> user = userRepository.findUserByEmail(userEmail);
+        Optional<User> user = getLoggedInUser();
 
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             link.setUser(user.get());
-            return linkRepository.save(link);
+            Document htmlContent = htmlParser.getHtmlContent(link);
+            Set<Tag> suggestedTags = htmlParser.parse(htmlContent, link);
+
+            if (suggestedTags.size() > 0) {
+                return linkRepository.save(link);
+            } else {
+                throw new CannotFindAnyTagOnLinkException();
+            }
         } else {
             throw new UserNotFoundException();
         }
+
+
     }
+
+    private Optional<User> getLoggedInUser() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findUserByEmail(userEmail);
+    }
+
+
 }

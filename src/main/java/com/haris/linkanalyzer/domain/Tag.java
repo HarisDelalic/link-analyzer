@@ -24,7 +24,7 @@ public class Tag {
     @NotNull
     String value;
 
-    @ManyToMany(mappedBy = "tags", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "tags", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private Set<Link> links = new HashSet<>();
 
 }

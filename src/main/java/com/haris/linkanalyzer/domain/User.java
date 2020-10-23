@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -11,7 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @ToString
-@Data
+@Getter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,8 +20,10 @@ public class User {
     private Long id;
     private String email;
     private String username;
-    @JsonIgnore
     private String password;
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
-    private Set<Link> links;
+    private Set<Link> links = new HashSet<>();
 }
